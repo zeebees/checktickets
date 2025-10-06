@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run check:*)",
+      "mcp__puppeteer__puppeteer_navigate",
+      "mcp__puppeteer__puppeteer_screenshot",
+      "mcp__puppeteer__puppeteer_evaluate",
+      "Bash(chmod:*)",
+      "Bash(node:*)",
+      "Bash(say \"Tickets available! Test notification\")",
+      "Bash(afplay:*)",
+      "Bash(timeout:*)",
+      "mcp__puppeteer__puppeteer_click",
+      "Bash(grep:*)",
+      "Bash(kill:*)",
+      "Bash(osascript:*)",
+      "Bash(tccutil reset:*)",
+      "Bash(open \"x-apple.systempreferences:com.apple.preference.notifications\")",
+      "Bash(npx node-notifier-cli:*)",
+      "Bash(awk:*)",
+      "Bash(pkill:*)",
+      "Bash(xargs kill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
