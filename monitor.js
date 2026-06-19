@@ -225,13 +225,12 @@ async function checkTiqets(page) {
   }
 }
 
-async function runCheck() {
+async function runCheck(browser) {
   console.log(`\n[${new Date().toLocaleString()}] Checking availability...`);
-  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+  });
   try {
-    const context = await browser.newContext({
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
-    });
     const page = await context.newPage();
 
     console.log('GetYourGuide...');
@@ -250,7 +249,7 @@ async function runCheck() {
   } catch (error) {
     console.error('Check error:', error.message);
   } finally {
-    await browser.close();
+    await context.close();
   }
 }
 
@@ -272,11 +271,16 @@ async function main() {
   console.log(`⏱️  Every:   ${CHECK_INTERVAL / 60000} minutes`);
   console.log('====================\n');
 
-  await runCheck();
-  setInterval(runCheck, CHECK_INTERVAL);
+  const browser = await chromium.launch({ headless: true });
+  process.on('SIGINT', async () => {
+    console.log('\n👋 Stopping.');
+    await browser.close();
+    process.exit(0);
+  });
+
+  await runCheck(browser);
+  setInterval(() => runCheck(browser), CHECK_INTERVAL);
   console.log('\n📍 Running. Press Ctrl+C to stop.\n');
 }
-
-process.on('SIGINT', () => { console.log('\n👋 Stopping.'); process.exit(0); });
 
 main().catch(console.error);
