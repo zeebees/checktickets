@@ -1,69 +1,59 @@
-# Sagrada Familia Ticket Monitor
+# Ticket Availability Monitor
 
-Automated ticket availability checker for Sagrada Familia that monitors the official website and sends instant notifications when your desired dates become available.
-
-## Features
-
-- ✅ Visual detection of available vs unavailable dates
-- 🎯 Priority alerts for your specific dates (Oct 12-15)
-- 📱 Desktop notifications (macOS)
-- 🔊 Voice announcements
-- 🎵 Sound alerts
-- ⏱️ Automatic checking every 5 minutes
-- 📝 Availability logging
+Monitors GetYourGuide and Tiqets for ticket availability on a specific date and time slot, sending instant macOS notifications when tickets become available.
 
 ## Setup
 
-Install dependencies:
 ```bash
 npm install
+npx playwright install chromium
 ```
 
 ## Usage
 
-Start the monitor:
+### Interactive (prompts for input)
+
 ```bash
 npm start
 ```
 
-The monitor will:
-- Check every 5 minutes for ticket availability
-- Send urgent notifications if Oct 12-15 become available
-- Show status of all October dates
+You'll be asked for:
+- GetYourGuide URL
+- Tiqets URL
+- Date (e.g. `October 13 2026`)
+- Preferred time slot (e.g. `9:00 AM`, or leave blank for any)
+- Number of adults (11-99), children (5-10), infants (4 and under)
 
-## Current Availability Status
+### CLI args
 
-Based on the official Sagrada Familia website:
-- **October 1-20**: ❌ Unavailable (including dates 12-15)
-- **October 21-31**: ✅ Available
+```bash
+node monitor.js \
+  --gyg-url="https://www.getyourguide.com/..." \
+  --tiqets-url="https://www.tiqets.com/..." \
+  --date="October 13 2026" \
+  --time="9:00 AM" \
+  --adults=2 \
+  --children=1 \
+  --infants=0
+```
+
+### As a Claude Code skill
+
+Type `/checktickets` in Claude Code — it will ask you the questions and launch the monitor.
 
 ## How It Works
 
-The monitor uses visual detection to identify available dates:
-- **Gray underlined text** = Unavailable dates
-- **Black text on white** = Available dates
+- Checks both sites every 2 minutes using a headless Playwright browser
+- Opens the date picker on each site and looks for your target date
+- If a time slot preference is set, clicks the date and checks the time slot UI
+- Falls back to date-only availability if the site doesn't show time slots yet
+- Sends a macOS desktop notification, voice alert, and sound when tickets are found
 
-When your priority dates (Oct 12-15) become available, you'll receive:
-1. 🖥️ Large console alert
-2. 📱 macOS desktop notification
-3. 🔊 Voice announcement: "URGENT! Your requested date is available!"
-4. 🎵 Multiple sound alerts
+## When Notified
 
-## Configuration
-
-Edit `monitor.js` to change:
-- `PRIORITY_DATES`: Your desired dates (default: 12, 13, 14, 15)
-- `CHECK_INTERVAL`: Check frequency (default: 5 minutes)
-
-## Tips
-
-- Keep the monitor running 24/7 to catch cancellations
-- Tickets can become available at any time
-- Act quickly when notified - tickets sell out fast
-- The official site has the best prices
+Act fast — book immediately at the URL shown in the notification. Tickets sell out quickly.
 
 ## Requirements
 
 - Node.js
-- macOS (for notifications)
-- Internet connection
+- macOS (for desktop notifications and voice alerts)
